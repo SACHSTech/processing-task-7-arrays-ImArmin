@@ -2,35 +2,68 @@ import processing.core.PApplet;
 
 public class Sketch extends PApplet {
 	
-	
-  /**
-   * Called once at the beginning of execution, put your size all in this method
-   */
   public void settings() {
-	// put your size call here
     size(400, 400);
   }
 
-  /** 
-   * Called once at the beginning of execution.  Add initial set up
-   * values here i.e background, stroke, fill etc.
-   */
+  float[] circleY = new float[50];
+  float[] snow = new float[50];
+  float[] mousePositionsX = new float[25];
+  float[] mousePositionsY = new float[25];
+  int index = 0;
+  int speed = 2;
+  int num = 50;
+
   public void setup() {
-    background(210, 255, 173);
+    background(51, 51, 51);
+
+    for (int i = 0; i < 50; i++) {
+      circleY[i] = random(height);
+    }
+    for (int i = 0; i < 50; i++) {
+      snow[i] = 5;
+    }
   }
 
-  /**
-   * Called repeatedly, anything drawn to the screen goes here
-   */
   public void draw() {
-	  
-	// sample code, delete this stuff
-    stroke(128);
-    line(150, 25, 270, 350);  
+	  background(51, 51, 51);
+    
+    for (int circleX = 0; circleX < 50; circleX++) {
+      ellipse(circleX*10, circleY[circleX], 10, 10);
+    }
 
-    stroke(255);
-    line(50, 125, 70, 50);  
+    for (int i = 0; i < 50; i++) {
+      circleY[i] += speed;
+      if (circleY[i] >= 400) {
+        circleY[i] = 0;
+        snow[i] += 5;
+      }
+    }
+    
+    for (int i = 0; i < 50; i++) {
+      fill(255, 255, 255);
+      rect(i*10, 400-snow[i], 10, 400);
+    }
+
+    mousePositionsX[index] = mouseX;
+    mousePositionsY[index] = mouseY;
+    index = (index + 1) % num;
+    for (int i = 0; i < 25; i++) {
+      int pos = (index + i) % num;
+      ellipse(mousePositionsX[pos], mousePositionsY[pos], i, i);
+    }
   }
-  
-  // define other methods down here.
+
+  public void keyPressed() {
+    if (keyCode == UP) {
+      speed = 3;
+    }
+    if (keyCode == DOWN) {
+      speed = 1;
+    }
+  }
+
+  public void keyReleased() {
+    speed = 2;
+	}
 }
